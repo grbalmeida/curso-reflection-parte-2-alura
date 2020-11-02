@@ -23,7 +23,40 @@ namespace ByteBank.Portal.Infraestrutura.IoC
 
         public object Recuperar(Type tipoOrigem)
         {
-            throw new NotImplementedException();
+            var tipoOrigemFoiMapeado = _mapaDeTipos.ContainsKey(tipoOrigem);
+
+            if (tipoOrigemFoiMapeado)
+            {
+                var tipoDestino = _mapaDeTipos[tipoOrigem];
+                return Recuperar(tipoDestino);
+            }
+
+            var construtores = tipoOrigem.GetConstructors();
+            var construtorSemParametros =
+                construtores.FirstOrDefault(construtor => !construtor.GetParameters().Any());
+        
+            if (construtorSemParametros != null)
+            {
+                var instanciaDeConstrutorSemParametros = construtorSemParametros.Invoke(new object[0]);
+                return instanciaDeConstrutorSemParametros;
+            }
+
+            var construtorQueVamosUsar = construtores[0];
+            var parametrosDoConstrutor = construtorQueVamosUsar.GetParameters();
+
+            var valoresDeParametros = new object[parametrosDoConstrutor.Count()];
+
+            for (int i = 0; i < parametrosDoConstrutor.Count(); i++)
+            {
+                var parametro = parametrosDoConstrutor[i];
+                var tipoParametro = parametro.ParameterType;
+
+                valoresDeParametros[i] = Recuperar(tipoParametro);
+            }
+
+            var instancia = construtorQueVamosUsar.Invoke(valoresDeParametros);
+
+            return instancia;
         }
 
         private void VerificarHierarquiaOuLancarExcecao(Type tipoOrigem, Type tipoDestino)
