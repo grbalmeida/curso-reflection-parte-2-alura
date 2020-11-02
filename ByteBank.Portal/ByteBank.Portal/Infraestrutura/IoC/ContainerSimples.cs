@@ -21,6 +21,14 @@ namespace ByteBank.Portal.Infraestrutura.IoC
             _mapaDeTipos.Add(tipoOrigem, tipoDestino);
         }
 
+        public void Registrar<TOrigem, TDestino>() where TDestino : TOrigem
+        {
+            if (_mapaDeTipos.ContainsKey(typeof(TOrigem)))
+                throw new InvalidOperationException("Tipo já mapeado!");
+
+            _mapaDeTipos.Add(typeof(TOrigem), typeof(TDestino));
+        }
+
         public object Recuperar(Type tipoOrigem)
         {
             var tipoOrigemFoiMapeado = _mapaDeTipos.ContainsKey(tipoOrigem);

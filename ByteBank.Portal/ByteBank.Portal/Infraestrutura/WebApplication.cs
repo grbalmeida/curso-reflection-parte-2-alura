@@ -21,8 +21,8 @@ namespace ByteBank.Portal.Infraestrutura
 
         private void Configurar()
         {
-            _container.Registrar(typeof(ICambioService), typeof(CambioTesteService));
-            _container.Registrar(typeof(ICartaoService), typeof(CartaoServiceTeste));
+            _container.Registrar<ICambioService, CambioTesteService>();
+            _container.Registrar<ICartaoService, CartaoServiceTeste>();
         }
 
         public void Iniciar()
