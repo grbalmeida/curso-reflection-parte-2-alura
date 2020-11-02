@@ -18,31 +18,21 @@ namespace ByteBank.Portal.Controller
         {
             var valorFinal = _cambioService.Calcular("MXN", "BRL", 1);
 
-            var modelo = new CambioBrasilModel
-            {
-                ValorEmReais = valorFinal
-            };
-
-            return View(modelo);
+            return View(new { ValorEmReais = valorFinal });
         }
 
         public string USD()
         {
             var valorFinal = _cambioService.Calcular("MXN", "BRL", 1);
 
-            var modelo = new CambioBrasilModel
-            {
-                ValorEmReais = valorFinal
-            };
-
-            return View(modelo);
+            return View(new { ValorEmReais = valorFinal });
         }
 
         public string Calculo(string moedaOrigem, string moedaDestino, decimal valor)
         {
             var valorFinal = _cambioService.Calcular(moedaOrigem, moedaDestino, valor);
 
-            var modelo = new CalculoCambioModel
+            var modelo = new
             {
                 MoedaDestino = moedaDestino,
                 ValorDestino = valorFinal,

@@ -53,7 +53,6 @@
     <Compile Include="Infraestrutura\Utilidades.cs" />
     <Compile Include="Infraestrutura\WebApplication.cs" />
     <Compile Include="Model\CalculoCambioModel.cs" />
-    <Compile Include="Model\CambioBrasilModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
