@@ -13,12 +13,6 @@ namespace ByteBank.Portal.Infraestrutura
 
         public void Manipular(HttpListenerResponse resposta, string path)
         {
-            // Cambio/MXN
-            // Cambio/USD
-
-            // Cartao/Credito
-            // Cartao/Debito
-
             var partes = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             var controllerNome = partes[0];
 
@@ -27,21 +21,29 @@ namespace ByteBank.Portal.Infraestrutura
             var controllerWrapper = Activator.CreateInstance("ByteBank.Portal", controllerNomeCompleto, new object[0]);
             var controller = controllerWrapper.Unwrap();
 
-            //var methodInfo = controller.GetType().GetMethod(actionNome);
             var actionBindInfo = _actionBinder.ObterActionBindInfo(controller, path);
 
             var filterResult = _filterResolver.VerificarFiltros(actionBindInfo);
 
-            var resultadoAction = (string)actionBindInfo.Invoke(controller);
+            if (filterResult.PodeContinuar)
+            {
+                var resultadoAction = (string)actionBindInfo.Invoke(controller);
 
-            var buffer = Encoding.UTF8.GetBytes(resultadoAction);
+                var buffer = Encoding.UTF8.GetBytes(resultadoAction);
 
-            resposta.StatusCode = (int)HttpStatusCode.OK;
-            resposta.ContentType = "text/html; charset=utf-8";
-            resposta.ContentLength64 = buffer.Length;
+                resposta.StatusCode = (int)HttpStatusCode.OK;
+                resposta.ContentType = "text/html; charset=utf-8";
+                resposta.ContentLength64 = buffer.Length;
 
-            resposta.OutputStream.Write(buffer, 0, buffer.Length);
-            resposta.OutputStream.Close();
+                resposta.OutputStream.Write(buffer, 0, buffer.Length);
+                resposta.OutputStream.Close();
+            }
+            else
+            {
+                resposta.StatusCode = (int)HttpStatusCode.TemporaryRedirect;
+                resposta.RedirectLocation = "/Erro/Inesperado";
+                resposta.OutputStream.Close();
+            }
         }
     }
 }

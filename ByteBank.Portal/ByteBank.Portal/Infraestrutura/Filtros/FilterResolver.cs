@@ -6,7 +6,7 @@ namespace ByteBank.Portal.Infraestrutura.Filtros
 {
     public class FilterResolver
     {
-        public object VerificarFiltros(ActionBindInfo actionBindInfo)
+        public FilterResult VerificarFiltros(ActionBindInfo actionBindInfo)
         {
             var methodInfo = actionBindInfo.MethodInfo;
 
@@ -14,8 +14,11 @@ namespace ByteBank.Portal.Infraestrutura.Filtros
         
             foreach (FiltroAttribute filtro in atributos)
             {
-                filtro.PodeContinuar();
+                if (!filtro.PodeContinuar())
+                    return new FilterResult(false);
             }
+
+            return new FilterResult(true);
         }
     }
 }
