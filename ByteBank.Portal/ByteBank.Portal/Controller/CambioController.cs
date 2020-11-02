@@ -1,8 +1,7 @@
 ﻿using ByteBank.Portal.Infraestrutura;
+using ByteBank.Portal.Model;
 using ByteBank.Service;
 using ByteBank.Service.Cambio;
-using System.IO;
-using System.Reflection;
 
 namespace ByteBank.Portal.Controller
 {
@@ -41,16 +40,15 @@ namespace ByteBank.Portal.Controller
         {
             var valorFinal = _cambioService.Calcular(moedaOrigem, moedaDestino, valor);
 
-            var textoPagina = View();
+            var modelo = new CalculoCambioModel
+            {
+                MoedaDestino = moedaDestino,
+                ValorDestino = valorFinal,
+                MoedaOrigem = moedaOrigem,
+                ValorOrigem = valor
+            };
 
-            var textoResultado =
-                textoPagina
-                    .Replace("VALOR_MOEDA_ORIGEM", valor.ToString())
-                    .Replace("VALOR_MOEDA_DESTINO", valorFinal.ToString())
-                    .Replace("MOEDA_ORIGEM", moedaOrigem)
-                    .Replace("MOEDA_DESTINO", moedaDestino);
-
-            return textoResultado;
+            return View(modelo);
         }
 
         public string Calculo(string moedaDestino, decimal valor) =>

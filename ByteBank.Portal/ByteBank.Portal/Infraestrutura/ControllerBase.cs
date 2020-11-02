@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel.Design;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -20,6 +21,13 @@ namespace ByteBank.Portal.Infraestrutura
             var textoPagina = streamLeitura.ReadToEnd();
 
             return textoPagina;
+        }
+
+        protected string View(object modelo, [CallerMemberName]string nomeArquivo = null)
+        {
+            var viewBruta = View(nomeArquivo);
+
+            return viewBruta;
         }
     }
 }
