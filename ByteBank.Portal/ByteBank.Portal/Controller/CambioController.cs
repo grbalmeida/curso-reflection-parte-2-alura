@@ -1,6 +1,5 @@
 ﻿using ByteBank.Portal.Infraestrutura;
 using ByteBank.Service;
-using ByteBank.Service.Cambio;
 using ByteBank.Portal.Filtros;
 
 namespace ByteBank.Portal.Controller
@@ -8,10 +7,12 @@ namespace ByteBank.Portal.Controller
     public class CambioController : ControllerBase
     {
         private readonly ICambioService _cambioService;
+        private readonly ICartaoService _cartaoService;
 
-        public CambioController()
+        public CambioController(ICambioService cambioService, ICartaoService cartaoService)
         {
-            _cambioService = new CambioTesteService();
+            _cambioService = cambioService;
+            _cartaoService = cartaoService;
         }
 
         [ApenasHorarioComercialFiltro]
@@ -34,13 +35,15 @@ namespace ByteBank.Portal.Controller
         public string Calculo(string moedaOrigem, string moedaDestino, decimal valor)
         {
             var valorFinal = _cambioService.Calcular(moedaOrigem, moedaDestino, valor);
+            var cartaoPromocao = _cartaoService.ObterCartaoDeCreditoDeDestaque();
 
             var modelo = new
             {
                 MoedaDestino = moedaDestino,
                 ValorDestino = valorFinal,
                 MoedaOrigem = moedaOrigem,
-                ValorOrigem = valor
+                ValorOrigem = valor,
+                CartaoPromocao = cartaoPromocao
             };
 
             return View(modelo);
