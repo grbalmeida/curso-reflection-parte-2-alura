@@ -1,4 +1,5 @@
-﻿using ByteBank.Portal.Infraestrutura.Binding;
+﻿using ByteBank.Portal.Filtros;
+using ByteBank.Portal.Infraestrutura.Binding;
 using System;
 
 namespace ByteBank.Portal.Infraestrutura.Filtros
@@ -7,7 +8,14 @@ namespace ByteBank.Portal.Infraestrutura.Filtros
     {
         public object VerificarFiltros(ActionBindInfo actionBindInfo)
         {
-            throw new NotImplementedException();
+            var methodInfo = actionBindInfo.MethodInfo;
+
+            var atributos = methodInfo.GetCustomAttributes(typeof(FiltroAttribute), inherit: false);
+        
+            foreach (FiltroAttribute filtro in atributos)
+            {
+                filtro.PodeContinuar();
+            }
         }
     }
 }

@@ -1,9 +1,15 @@
-﻿using System;
+﻿using ByteBank.Portal.Infraestrutura.Filtros;
+using System;
 
 namespace ByteBank.Portal.Filtros
 {
-    public class ApenasHorarioComercialAttribute : Attribute
+    public class ApenasHorarioComercialFiltroAttribute : FiltroAttribute
     {
+        public override bool PodeContinuar()
+        {
+            var hora = DateTime.Now.Hour;
 
+            return hora >= 9 && hora < 16;
+        }
     }
 }
