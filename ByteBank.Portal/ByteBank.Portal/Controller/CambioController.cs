@@ -1,7 +1,7 @@
 ﻿using ByteBank.Portal.Infraestrutura;
-using ByteBank.Portal.Model;
 using ByteBank.Service;
 using ByteBank.Service.Cambio;
+using ByteBank.Portal.Filtros;
 
 namespace ByteBank.Portal.Controller
 {
@@ -14,6 +14,7 @@ namespace ByteBank.Portal.Controller
             _cambioService = new CambioTesteService();
         }
 
+        [ApenasHorarioComercial]
         public string MXN()
         {
             var valorFinal = _cambioService.Calcular("MXN", "BRL", 1);
@@ -21,6 +22,7 @@ namespace ByteBank.Portal.Controller
             return View(new { ValorEmReais = valorFinal });
         }
 
+        [ApenasHorarioComercial]
         public string USD()
         {
             var valorFinal = _cambioService.Calcular("MXN", "BRL", 1);
@@ -28,6 +30,7 @@ namespace ByteBank.Portal.Controller
             return View(new { ValorEmReais = valorFinal });
         }
 
+        [ApenasHorarioComercial]
         public string Calculo(string moedaOrigem, string moedaDestino, decimal valor)
         {
             var valorFinal = _cambioService.Calcular(moedaOrigem, moedaDestino, valor);
@@ -43,9 +46,11 @@ namespace ByteBank.Portal.Controller
             return View(modelo);
         }
 
+        [ApenasHorarioComercial]
         public string Calculo(string moedaDestino, decimal valor) =>
             Calculo("BRL", moedaDestino, valor);
 
+        [ApenasHorarioComercial]
         public string Calculo(string moedaDestino) =>
             Calculo("BRL", moedaDestino, 1);
     }
